@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawVibesZ 🐾 cats on zoom for zoomers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Chivo+Mono:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --z-lime:   #C8FF00;
+    --z-pink:   #FF2D78;
+    --z-cyan:   #00F0FF;
+    --z-purple: #8B2CF5;
+    --z-orange: #FF6B1A;
+    --z-yellow: #FFE600;
+    --z-dark:   #0D0D0D;
+    --z-off:    #111318;
+    --z-mid:    #1C1E27;
+    --z-card:   #181B24;
+    --z-text:   #E8E8F0;
+    --z-muted:  #9090A8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--z-dark);
+    color: var(--z-text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    position: relative;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a0036 0%, var(--z-dark) 70%);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--z-purple);
+    color: #fff;
+    font-family: 'Chivo Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: clamp(3.2rem, 12vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeDown 0.7s 0.1s ease both;
+  }
+
+  .h1-line1 { color: var(--z-lime); display: block; }
+  .h1-line2 { color: var(--z-pink); display: block; }
+  .h1-line3 { color: var(--z-cyan); display: block; }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--z-muted);
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    font-family: 'Chivo Mono', monospace;
+    animation: fadeDown 0.7s 0.2s ease both;
+  }
+
+  .hero-sub em { color: var(--z-yellow); font-style: normal; }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--z-lime);
+    color: #000;
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    padding: 1rem 2.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    animation: fadeDown 0.7s 0.3s ease both;
+    box-shadow: 6px 6px 0 var(--z-purple);
+  }
+  .hero-cta:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--z-purple); }
+
+  /* floating cats */
+  .floater {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.18;
+    user-select: none;
+    animation: drift 8s ease-in-out infinite;
+  }
+  .floater:nth-child(1)  { top: 12%; left: 7%;  animation-delay: 0s;   font-size: 2.5rem; }
+  .floater:nth-child(2)  { top: 20%; right: 9%; animation-delay: 1.2s; font-size: 4rem;   }
+  .floater:nth-child(3)  { bottom: 25%; left: 5%;  animation-delay: 2.4s; }
+  .floater:nth-child(4)  { bottom: 18%; right: 6%; animation-delay: 0.8s; font-size: 2rem; }
+  .floater:nth-child(5)  { top: 50%; left: 2%;  animation-delay: 3.5s; font-size: 1.8rem; }
+  .floater:nth-child(6)  { top: 55%; right: 3%; animation-delay: 1.8s; }
+
+  @keyframes drift {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50%       { transform: translateY(-18px) rotate(4deg); }
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 5rem 1.5rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Chivo Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--z-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    background: var(--z-pink);
+    overflow: hidden;
+    padding: 14px 0;
+    border-top: 2px solid var(--z-lime);
+    border-bottom: 2px solid var(--z-lime);
+  }
+  .ticker-inner {
+    display: flex;
+    gap: 3rem;
+    white-space: nowrap;
+    animation: ticker 18s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 1rem;
+    color: #000;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── WHAT IS GEN Z ── */
+  #genz { background: var(--z-off); }
+
+  .genz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .genz-card {
+    background: var(--z-card);
+    border: 1px solid #2a2d3a;
+    border-radius: 12px;
+    padding: 1.75rem;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .genz-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .genz-card:nth-child(1)::before { background: var(--z-lime); }
+  .genz-card:nth-child(2)::before { background: var(--z-pink); }
+  .genz-card:nth-child(3)::before { background: var(--z-cyan); }
+  .genz-card:nth-child(4)::before { background: var(--z-orange); }
+  .genz-card:nth-child(5)::before { background: var(--z-yellow); }
+  .genz-card:nth-child(6)::before { background: var(--z-purple); }
+
+  .genz-card:hover { transform: translateY(-4px); border-color: #444; }
+
+  .card-icon { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .card-title {
+    font-family: 'Chivo Mono', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+  .card-text { font-size: 0.9rem; color: var(--z-muted); line-height: 1.65; }
+
+  /* ── ZOOM CATS GALLERY ── */
+  #gallery { background: var(--z-dark); }
+
+  .zoom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .zoom-tile {
+    background: var(--z-card);
+    border-radius: 12px;
+    padding: 1.5rem 1rem 1rem;
+    text-align: center;
+    border: 1px solid #222530;
+    transition: transform 0.2s;
+    position: relative;
+  }
+  .zoom-tile:hover { transform: scale(1.03); }
+
+  .zoom-header {
+    background: var(--z-mid);
+    border-radius: 8px 8px 0 0;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: -1.5rem -1rem 1rem;
+    border-bottom: 1px solid #2a2d3a;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FEBC2E; }
+  .dot-g { background: #28C840; }
+
+  .zoom-name {
+    font-family: 'Chivo Mono', monospace;
+    font-size: 10px;
+    color: var(--z-muted);
+    margin-left: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cat-face {
+    font-size: 4rem;
+    display: block;
+    margin: 0.5rem auto 0.75rem;
+    filter: drop-shadow(0 0 12px rgba(0,240,255,0.25));
+    animation: catbob 3s ease-in-out infinite;
+  }
+  .zoom-tile:nth-child(2) .cat-face { animation-delay: 0.5s; filter: drop-shadow(0 0 12px rgba(200,255,0,0.25)); }
+  .zoom-tile:nth-child(3) .cat-face { animation-delay: 1s;   filter: drop-shadow(0 0 12px rgba(255,45,120,0.25)); }
+  .zoom-tile:nth-child(4) .cat-face { animation-delay: 1.5s; filter: drop-shadow(0 0 12px rgba(139,44,245,0.25)); }
+  .zoom-tile:nth-child(5) .cat-face { animation-delay: 2s;   filter: drop-shadow(0 0 12px rgba(255,107,26,0.25)); }
+  .zoom-tile:nth-child(6) .cat-face { animation-delay: 2.5s; filter: drop-shadow(0 0 12px rgba(255,230,0,0.25)); }
+
+  @keyframes catbob {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+
+  .cat-name {
+    font-family: 'Chivo Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .cat-vibe {
+    font-size: 0.78rem;
+    color: var(--z-muted);
+    font-style: italic;
+  }
+  .cat-tag {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.7rem;
+    font-family: 'Chivo Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
+  .tag-lime   { background: #c8ff0022; color: var(--z-lime); border: 1px solid var(--z-lime); }
+  .tag-pink   { background: #ff2d7822; color: var(--z-pink); border: 1px solid var(--z-pink); }
+  .tag-cyan   { background: #00f0ff22; color: var(--z-cyan); border: 1px solid var(--z-cyan); }
+  .tag-purple { background: #8b2cf522; color: #c084fc;       border: 1px solid #8b2cf5; }
+  .tag-orange { background: #ff6b1a22; color: var(--z-orange); border: 1px solid var(--z-orange); }
+  .tag-yellow { background: #ffe60022; color: var(--z-yellow); border: 1px solid var(--z-yellow); }
+
+  /* ── STATS ── */
+  #stats {
+    background: var(--z-purple);
+    position: relative;
+    overflow: hidden;
+  }
+  #stats::before {
+    content: '🐾🐾🐾🐾🐾🐾🐾🐾🐾🐾';
+    position: absolute;
+    font-size: 8rem;
+    opacity: 0.05;
+    white-space: nowrap;
+    top: -20px; left: -20px;
+    letter-spacing: 1rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+    position: relative;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    color: var(--z-lime);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-label {
+    font-family: 'Chivo Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ── WHY CATS + ZOOM ── */
+  #why { background: var(--z-off); }
+
+  .why-list {
+    list-style: none;
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .why-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    background: var(--z-card);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #22253100;
+    transition: border-color 0.2s;
+  }
+  .why-item:hover { border-color: #333645; }
+
+  .why-num {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 2.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 3rem;
+    text-align: center;
+  }
+  .why-item:nth-child(1) .why-num { color: var(--z-lime); }
+  .why-item:nth-child(2) .why-num { color: var(--z-pink); }
+  .why-item:nth-child(3) .why-num { color: var(--z-cyan); }
+  .why-item:nth-child(4) .why-num { color: var(--z-orange); }
+  .why-item:nth-child(5) .why-num { color: var(--z-yellow); }
+
+  .why-body {}
+  .why-title {
+    font-family: 'Chivo Mono', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .why-desc { font-size: 0.9rem; color: var(--z-muted); }
+
+  /* ── CTA SECTION ── */
+  #cta {
+    background: var(--z-dark);
+    text-align: center;
+    padding: 6rem 1.5rem;
+  }
+  .cta-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .cta-title {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 1;
+    margin-bottom: 1.25rem;
+  }
+  .cta-title span { color: var(--z-pink); }
+  .cta-sub { color: var(--z-muted); font-size: 1rem; margin-bottom: 2.5rem; font-family: 'Chivo Mono', monospace; }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--z-pink);
+    color: #fff;
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 1.1rem;
+    padding: 1.1rem 3rem;
+    border-radius: 6px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    box-shadow: 6px 6px 0 var(--z-lime);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .cta-btn:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--z-lime); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--z-mid);
+    border-top: 1px solid #222530;
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .footer-logo {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 1.3rem;
+  }
+  .footer-logo span:nth-child(1) { color: var(--z-lime); }
+  .footer-logo span:nth-child(2) { color: var(--z-pink); }
+  .footer-logo span:nth-child(3) { color: var(--z-cyan); }
+  .footer-link {
+    color: var(--z-muted);
+    font-size: 0.8rem;
+    font-family: 'Chivo Mono', monospace;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-link:hover { color: var(--z-lime); }
+  .footer-copy { font-size: 0.75rem; color: #444; font-family: 'Chivo Mono', monospace; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #1c1e27;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Rubik Mono One', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+  .nav-logo .p { color: var(--z-lime); }
+  .nav-logo .a { color: var(--z-pink); }
+  .nav-logo .w { color: var(--z-cyan); }
+  .nav-logo .z { color: var(--z-yellow); }
+
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-family: 'Chivo Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--z-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--z-lime); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── responsive ── */
+  @media (max-width: 600px) {
+    nav { padding: 0.75rem 1rem; }
+    .nav-links { display: none; }
+    .zoom-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="p">P</span><span class="a">A</span><span class="w">W</span><span class="z">Z</span>
+  </a>
+  <div class="nav-links">
+    <a href="#genz">who we are</a>
+    <a href="#gallery">the cats</a>
+    <a href="#why">why tho</a>
+    <a href="https://paniaguai.github.io/pawz/" target="_blank">visit site ↗</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- floating decorations -->
+  <span class="floater">🐱</span>
+  <span class="floater">🐾</span>
+  <span class="floater">😸</span>
+  <span class="floater">🐈</span>
+  <span class="floater">✨</span>
+  <span class="floater">🐱</span>
+
+  <div class="hero-badge">🐾 born 1997–2012 · zoomers only · no cap</div>
+
+  <h1>
+    <span class="h1-line1">PAW</span>
+    <span class="h1-line2">VIBES</span>
+    <span class="h1-line3">Z</span>
+  </h1>
+
+  <p class="hero-sub">
+    cats on zoom — curated for <em>zoomers</em>.<br>
+    because screen time hits different when there's a cat in the meeting.
+  </p>
+
+  <a href="https://paniaguai.github.io/pawz/" target="_blank" class="hero-cta">join the call 🐱</a>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-inner">
+    <span class="ticker-item">🐱 you're on mute &nbsp;·&nbsp;</span>
+    <span class="ticker-item">🐾 cat entered the chat &nbsp;·&nbsp;</span>
+    <span class="ticker-item">😸 no cap, cats slap &nbsp;·&nbsp;</span>
+    <span class="ticker-item">💅 digital native energy &nbsp;·&nbsp;</span>
+    <span class="ticker-item">🐱 you're on mute &nbsp;·&nbsp;</span>
+    <span class="ticker-item">🐾 cat entered the chat &nbsp;·&nbsp;</span>
+    <span class="ticker-item">😸 no cap, cats slap &nbsp;·&nbsp;</span>
+    <span class="ticker-item">💅 digital native energy &nbsp;·&nbsp;</span>
+    <span class="ticker-item">🐱 you're on mute &nbsp;·&nbsp;</span>
+    <span class="ticker-item">🐾 cat entered the chat &nbsp;·&nbsp;</span>
+    <span class="ticker-item">😸 no cap, cats slap &nbsp;·&nbsp;</span>
+    <span class="ticker-item">💅 digital native energy &nbsp;·&nbsp;</span>
+  </div>
+</div>
+
+<!-- GEN Z SECTION -->
+<section id="genz">
+  <div class="container">
+    <p class="section-label">// who are we</p>
+    <h2 class="section-title" style="color: var(--z-cyan);">gen z,<br>explained.</h2>
+    <p style="color: var(--z-muted); max-width: 560px; font-family: 'Chivo Mono', monospace; font-size: 0.95rem; margin-top: 1rem;">
+      born 1997–2012. the first generation to grow up with smartphones as a given. digital natives who speak internet fluently, care deeply, and multitask across seventeen tabs while a cat judges them on Zoom.
+    </p>
+
+    <div class="genz-grid">
+      <div class="genz-card">
+        <span class="card-icon">📱</span>
+        <p class="card-title">digital natives</p>
+        <p class="card-text">gen z grew up with web 2.0 and digital technology as an established commodity — online video, gaming, and social media were never novelties, just reality.</p>
+      </div>
+      <div class="genz-card">
+        <span class="card-icon">🧠</span>
+        <p class="card-title">mental health aware</p>
+        <p class="card-text">greater awareness and open conversation around mental health distinguishes zoomers. they talk about it. they seek help. they check in on each other (and their cats).</p>
+      </div>
+      <div class="genz-card">
+        <span class="card-icon">🌍</span>
+        <p class="card-title">politically active</p>
+        <p class="card-text">gen z has been active in politics around the world — showing up, speaking up, and making noise on the issues that matter most to their future.</p>
+      </div>
+      <div class="genz-card">
+        <span class="card-icon">🎮</span>
+        <p class="card-title">play-first culture</p>
+        <p class="card-text">online gaming, streaming, and content creation are native languages. entertainment is participatory, not passive. and sometimes the cat runs across the keyboard mid-stream.</p>
+      </div>
+      <div class="genz-card">
+        <span class="card-icon">⏳</span>
+        <p class="card-title">delayed gratification</p>
+        <p class="card-text">research shows zoomers are actually better at delaying gratification than teens from the 1960s — patient, strategic, and focused on long-term goals.</p>
+      </div>
+      <div class="genz-card">
+        <span class="card-icon">🌀</span>
+        <p class="card-title">nostalgia coded</p>
+        <p class="card-text">nostalgia is a defining theme of zoomer culture in the 2010s and 2020s. y2k, flip phones, early youtube — it all hits different in retrospect.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <p class="section-label">// live from zoom</p>
+    <h2 class="section-title" style="color: var(--z-lime);">the cats<br>of pawvibesz</h2>
+    <p style="color: var(--z-muted); font-family: 'Chivo Mono', monospace; font-size: 0.9rem; margin-top: 0.75rem; margin-bottom: 0;">
+      they didn't ask to be on the call. they just wanted a snack.
+    </p>
+
+    <div class="zoom-grid">
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">matcha.tabby@gmail</span>
+        </div>
+        <span class="cat-face">🐱</span>
+        <p class="cat-name">Matcha</p>
+        <p class="cat-vibe">"is this thing on"</p>
+        <span class="cat-tag tag-lime">#unmuted</span>
+      </div>
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">boba.persian@meow</span>
+        </div>
+        <span class="cat-face">😸</span>
+        <p class="cat-name">Boba</p>
+        <p class="cat-vibe">"camera on, judging u"</p>
+        <span class="cat-tag tag-pink">#main character</span>
+      </div>
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">mochi.siamese@pawz</span>
+        </div>
+        <span class="cat-face">🐈</span>
+        <p class="cat-name">Mochi</p>
+        <p class="cat-vibe">"walked across keyboard"</p>
+        <span class="cat-tag tag-cyan">#chaos agent</span>
+      </div>
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">yuzu.void@darkmode</span>
+        </div>
+        <span class="cat-face">😾</span>
+        <p class="cat-name">Yuzu</p>
+        <p class="cat-vibe">"log me off rn"</p>
+        <span class="cat-tag tag-purple">#do not disturb</span>
+      </div>
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">latte.orange@cozy</span>
+        </div>
+        <span class="cat-face">😻</span>
+        <p class="cat-name">Latte</p>
+        <p class="cat-vibe">"sent u a pawprint"</p>
+        <span class="cat-tag tag-orange">#wholesome</span>
+      </div>
+
+      <div class="zoom-tile">
+        <div class="zoom-header">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="zoom-name">soba.floof@lowbattery</span>
+        </div>
+        <span class="cat-face">🙀</span>
+        <p class="cat-name">Soba</p>
+        <p class="cat-vibe">"someone said snack?"</p>
+        <span class="cat-tag tag-yellow">#hyperactive</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <p class="section-label" style="color: rgba(255,255,255,0.5);">// by the numbers</p>
+    <h2 class="section-title" style="color: #fff;">zoomers<br>+ zoom cats</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-num">2B+</span>
+        <span class="stat-label">gen z worldwide</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">600M</span>
+        <span class="stat-label">cat videos daily</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">97%</span>
+        <span class="stat-label">zoomed with a pet near</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">vibes unlocked</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CATS + ZOOM -->
+<section id="why">
+  <div class="container">
+    <p class="section-label">// the thesis</p>
+    <h2 class="section-title" style="color: var(--z-pink);">why cats<br>on zoom, tho?</h2>
+    <p style="color: var(--z-muted); font-family: 'Chivo Mono', monospace; font-size: 0.9rem; margin-top: 0.75rem;">
+      no fr — there's a reason.
+    </p>
+
+    <ul class="why-list">
+      <li class="why-item">
+        <span class="why-num">01</span>
+        <div class="why-body">
+          <p class="why-title">anxiety buffer IRL</p>
+          <p class="why-desc">gen z experiences higher reported anxiety and mental health challenges. having a cat in frame (or just nearby) during calls is scientifically linked to lower stress and cortisol. that's just facts.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-num">02</span>
+        <div class="why-body">
+          <p class="why-title">virtual connection, physical warmth</p>
+          <p class="why-desc">zoomers grew up digital but crave genuine connection. cats bridge the gap — a living, purring presence that grounds you when the world is 100% screens.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-num">03</span>
+        <div class="why-body">
+          <p class="why-title">perfect content, naturally</p>
+          <p class="why-desc">gen z communicates through memes, clips, and shared cultural moments. a cat walking across a keyboard during a presentation? peak content. zero effort required.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-num">04</span>
+        <div class="why-body">
+          <p class="why-title">authentic over performative</p>
+          <p class="why-desc">zoomers reject the polished persona. a cat appearing uninvited on your call is chaotic, real, and deeply relatable — exactly the vibe the generation values most.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <span class="why-num">05</span>
+        <div class="why-body">
+          <p class="why-title">nostalgia + internet culture DNA</p>
+          <p class="why-desc">cat content is foundational internet culture — from early youtube to tiktok. for zoomers raised online, cats on screen is both a callback and a constant. it never gets old.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <p class="section-label" style="text-align:center;">// the final slide</p>
+    <h2 class="cta-title">join the <span>PawVibesZ</span><br>community</h2>
+    <p class="cta-sub">your next zoom call needs a cat. it's not a want, it's a need.<br>visit the official site and vibe accordingly.</p>
+    <a href="https://paniaguai.github.io/pawz/" target="_blank" class="cta-btn">🐱 go to pawvibesz</a>
+    <p style="margin-top: 1.5rem; font-size: 0.78rem; color: #333; font-family: 'Chivo Mono', monospace;">
+      <a href="https://en.wikipedia.org/wiki/Generation_Z" target="_blank" style="color: #444; text-decoration: none;">gen z data via wikipedia ↗</a>
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <p class="footer-logo">
+      <span>PAW</span><span>VIBES</span><span>Z</span>
+    </p>
+    <p style="font-family:'Chivo Mono',monospace; font-size:0.8rem; color: var(--z-muted);">
+      cats on zoom · for the zoomer generation
+    </p>
+    <a href="https://paniaguai.github.io/pawz/" target="_blank" class="footer-link">🔗 paniaguai.github.io/pawz</a>
+    <p class="footer-copy">made with 🐾 for gen z (born 1997–2012) · no cats were unmuted without consent</p>
+  </div>
+</footer>
+
+</body>
+</html>
